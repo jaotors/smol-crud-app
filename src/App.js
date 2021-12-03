@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
+import ListNamesComponent from './ListNames'
 
+let uid = -1
 const App = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const [searchKeyword, setSearchKeyword] = useState('')
   const [id, setId] = useState(-1)
   const [listNames, setListNames] = useState([])
   const [status, setStatus] = useState('add')
+  const [filteredListNames, setFilteredListNames] = useState([])
 
   const handleSave = () => {
     if (status === 'add') {
-      setListNames([
-        ...listNames,
-        { id: listNames.length, firstName, lastName },
-      ])
+      uid += 1
+      setListNames([...listNames, { id: uid, firstName, lastName }])
     } else if (status === 'edit') {
       const editName = listNames.find((name) => name.id === id)
       setListNames(
@@ -32,6 +34,7 @@ const App = () => {
     setFirstName('')
     setLastName('')
     setStatus('add')
+    setSearchKeyword('')
   }
 
   const handleEdit = (val) => {
@@ -53,6 +56,17 @@ const App = () => {
     setLastName('')
     setId(-1)
     setStatus('add')
+    setSearchKeyword('')
+  }
+
+  const handleSearch = (event) => {
+    const { value } = event.target
+
+    setSearchKeyword(value)
+    const filteredNames = listNames.filter((name) => {
+      return name.firstName.toLowerCase().includes(value.toLowerCase())
+    })
+    setFilteredListNames(filteredNames)
   }
 
   return (
@@ -84,16 +98,16 @@ const App = () => {
       <br />
       <br />
       <br />
-      <ul>
-        {listNames.map((name) => (
-          <li key={name.id} style={{ display: 'flex', gap: 10 }}>
-            <div onClick={() => handleEdit(name)}>
-              {`${name.id} ${name.firstName} ${name.lastName}`}
-            </div>
-            <button onClick={() => handleDelete(name.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <div>
+        search keyword
+        <input type="text" value={searchKeyword} onChange={handleSearch} />
+      </div>
+
+      <ListNamesComponent
+        names={searchKeyword === '' ? listNames : filteredListNames}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     </div>
   )
 }
