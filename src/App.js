@@ -86,8 +86,10 @@ const App = () => {
       <br />
       <ul>
         {listNames.map((name) => (
-          <li key={name.id} onClick={() => handleEdit(name)}>
-            {`${name.id} ${name.firstName} ${name.lastName}`}{' '}
+          <li key={name.id} style={{ display: 'flex', gap: 10 }}>
+            <div onClick={() => handleEdit(name)}>
+              {`${name.id} ${name.firstName} ${name.lastName}`}
+            </div>
             <button onClick={() => handleDelete(name.id)}>Delete</button>
           </li>
         ))}
