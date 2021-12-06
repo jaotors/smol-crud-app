@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ListNamesComponent from './ListNames'
 
 let uid = -1
@@ -63,10 +63,6 @@ const App = () => {
     const { value } = event.target
 
     setSearchKeyword(value)
-    const filteredNames = listNames.filter((name) => {
-      return name.firstName.toLowerCase().includes(value.toLowerCase())
-    })
-    setFilteredListNames(filteredNames)
   }
 
   return (
@@ -104,7 +100,8 @@ const App = () => {
       </div>
 
       <ListNamesComponent
-        names={searchKeyword === '' ? listNames : filteredListNames}
+        names={listNames}
+        searchKeyword={searchKeyword}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
