@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import ListNamesComponent from './ListNames'
 
 let uid = -1
@@ -9,7 +9,6 @@ const App = () => {
   const [id, setId] = useState(-1)
   const [listNames, setListNames] = useState([])
   const [status, setStatus] = useState('add')
-  const [filteredListNames, setFilteredListNames] = useState([])
 
   const handleSave = () => {
     if (status === 'add') {
