@@ -1,15 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ListNamesComponent from './ListNames'
 
-let uid = -1
+const initialList = [
+  {
+    id: 0,
+    firstName: 'Jao',
+    lastName: 'Turingan',
+  },
+  {
+    id: 1,
+    firstName: 'Jaren',
+    lastName: 'Pogi',
+  },
+]
+
+let uid = initialList.length - 1
 const App = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [searchKeyword, setSearchKeyword] = useState('')
   const [id, setId] = useState(-1)
+  const [searchKeyword, setSearchKeyword] = useState('')
   const [listNames, setListNames] = useState([])
   const [status, setStatus] = useState('add')
-
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSave = () => {
     if (status === 'add') {
@@ -65,13 +78,25 @@ const App = () => {
     setSearchKeyword(value)
   }
 
+  useEffect(() => {
+    setIsLoading(true)
+    const fetchList = setTimeout(() => {
+      setListNames(initialList)
+      setIsLoading(false)
+    }, 4000)
+
+    return () => {
+      clearTimeout(fetchList)
+    }
+  }, [])
+
   return (
     <div>
       <div>
         <div>{status}</div>
         <label>first name</label>
         <input
-          type="text"
+          type='text'
           value={firstName}
           onChange={(e) => {
             const { value } = e.target
@@ -82,7 +107,7 @@ const App = () => {
       <div>
         <label>last name</label>
         <input
-          type="text"
+          type='text'
           value={lastName}
           onChange={(e) => {
             const { value } = e.target
@@ -96,15 +121,19 @@ const App = () => {
       <br />
       <div>
         search keyword
-        <input type="text" value={searchKeyword} onChange={handleSearch} />
+        <input type='text' value={searchKeyword} onChange={handleSearch} />
       </div>
 
-      <ListNamesComponent
-        names={listNames}
-        searchKeyword={searchKeyword}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <ListNamesComponent
+          names={listNames}
+          searchKeyword={searchKeyword}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
   )
 }
